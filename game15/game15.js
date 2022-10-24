@@ -1,5 +1,12 @@
 export class Game15 {
-    constructor(target, cellSize, cellsByEdge, bgColor, cellFillColor, numberColor) {
+    constructor(
+        target,
+        cellSize,
+        cellsByEdge,
+        bgColor,
+        cellFillColor,
+        numberColor
+    ) {
         this.cellsByEdge = cellsByEdge;
         this.winState = this.generateWinState();
         this.state = this.generateStartState();
@@ -14,14 +21,16 @@ export class Game15 {
             rowIndex: this.cellsByEdge - 1,
             colIndex: this.cellsByEdge - 1,
         };
-        this.getStateFromLocalStorage ();
+        this.getStateFromLocalStorage();
         this.setStateToLocalStorage(this.state);
     }
     generateStartState() {
         let isStateUnResolvable, startState;
 
         do {
-            const winState = this.winState.map((row) => row.map((el) => el)).flat();
+            const winState = this.winState
+                .map((row) => row.map((el) => el))
+                .flat();
             winState.pop();
             startState = [];
             for (let i = 0; i < this.cellsByEdge; i++) {
@@ -55,7 +64,9 @@ export class Game15 {
                     }
                 }
             });
-            return (holeRow % 2 === 0) ? (count + holeRow) % 2 !== 0 : (count + holeRow) % 2 === 0;
+            return holeRow % 2 === 0
+                ? (count + holeRow) % 2 !== 0
+                : (count + holeRow) % 2 === 0;
         }
     }
 
@@ -92,7 +103,7 @@ export class Game15 {
     draw() {
         this.context.fillStyle = this.bgColor;
         this.context.fillRect(0, 0, this.target.width, this.target.height);
-       for (let i = 0; i < this.cellsByEdge; i++) {
+        for (let i = 0; i < this.cellsByEdge; i++) {
             for (let j = 0; j < this.cellsByEdge; j++) {
                 if (this.state[i][j] > 0) {
                     this.cellRender(j * this.cellSize, i * this.cellSize);
@@ -134,16 +145,13 @@ export class Game15 {
             this.winCheck();
             return true;
         }
-
-        
     }
 
     winCheck() {
         const currState = this.state.map((row) => row.map((el) => el)).flat(),
-        winState = this.winState.map((row) => row.map((el) => el)).flat(),
+            winState = this.winState.map((row) => row.map((el) => el)).flat(),
             check =
-                currState.filter((el, i) => el !== winState[i]).length ===
-                0;
+                currState.filter((el, i) => el !== winState[i]).length === 0;
         if (check) {
             const wingame = new Event("wingame");
             document.dispatchEvent(wingame);
@@ -151,12 +159,12 @@ export class Game15 {
     }
 
     setStateToLocalStorage(state) {
-        const localState = this.state.map(el => el.map(ell => ell)).flat();
+        const localState = this.state.map((el) => el.map((ell) => ell)).flat();
         localStorage.setItem("state", localState.join(";"));
         localStorage.setItem("cellsPerEdge", this.cellsByEdge);
     }
 
-    getStateFromLocalStorage () {
+    getStateFromLocalStorage() {
         if (localStorage.getItem("state")) {
             const lastState = localStorage.getItem("state").split(";");
             this.state = [];
@@ -174,7 +182,7 @@ export class Game15 {
         }
     }
 
-    findHole () {
+    findHole() {
         for (let i = 0; i < this.cellsByEdge; i++) {
             for (let j = 0; j < this.cellsByEdge; j++) {
                 if (this.state[i][j] === 0) {
@@ -185,5 +193,4 @@ export class Game15 {
             }
         }
     }
-    
 }

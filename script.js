@@ -33,12 +33,12 @@ pageInit();
 
 function pageInit() {
     if (contentHeight < 1181 || contentWidth < 1181) {
-        canvasSize = Math.min(0.6 * contentHeight, 0.6 * contentWidth);    
-    };
+        canvasSize = Math.min(0.6 * contentHeight, 0.6 * contentWidth);
+    }
     if (contentHeight < 768 || contentWidth < 768) {
         canvasSize = Math.min(0.8 * contentHeight, 0.8 * contentWidth);
     } else {
-        canvasSize = Math.min(0.5 * contentHeight, 0.5 * contentWidth);    
+        canvasSize = Math.min(0.5 * contentHeight, 0.5 * contentWidth);
     }
     body.innerHTML = createHTML(canvasSize - 2 * padding);
     const canvas = document.querySelector("canvas");
