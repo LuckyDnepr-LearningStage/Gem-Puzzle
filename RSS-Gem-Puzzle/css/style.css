@@ -1,0 +1,328 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: rgb(204, 204, 204);
+    width: 100%;
+    height: 100%;
+}
+
+li {
+    list-style: none;
+}
+
+input[type="radio"] {
+    appearance: none;
+}
+
+#sound_onoff {
+    appearance: none;
+}
+
+.main {
+    height: 100%;
+    width: 800px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2em;
+}
+
+.game_menu,
+.game_status {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.2rem;
+}
+
+.game_menu_item {
+    width: 100%;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    border: 2px solid orange;
+    background-color: rgb(236, 248, 255);
+    border-radius: 5px;
+    padding: 0.2rem 0.5rem;
+    margin: 0 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.game_menu_item:hover,
+.game_settings_item:hover {
+    box-shadow: 4px 4px 5px grey, -4px -4px 5px white;
+}
+
+.game_menu_item:active,
+.game_settings_item:active {
+    box-shadow: none;
+}
+
+.game_status {
+    width: 100%;
+    justify-content: space-evenly;
+    margin: 1em 0 0.5em 0;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.game_status_item {
+    width: 25%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#minutes,
+#moves_count {
+    margin-left: 1rem;
+}
+
+.sound_onoff_label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2rem;
+    width: 5rem;
+    background-color: white;
+    padding: 5px;
+    cursor: pointer;
+    border: 2px solid orange;
+    background-color: rgb(255, 215, 142);
+    border-radius: 5px;
+}
+
+.sound_onoff_label:hover {
+    box-shadow: 4px 4px 5px grey, -4px -4px 5px white;
+}
+
+#sound_onoff:checked + label {
+    box-shadow: inset -4px -4px 5px rgb(187, 187, 187), inset 4px 4px 5px grey;
+    border: 2px solid grey;
+    background-color: rgb(190, 176, 176);
+}
+
+.game_settings {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5em 0 1em 0;
+}
+
+.game_settings_item {
+    width: 100%;
+    margin: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid orange;
+    background-color: rgb(236, 248, 255);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.game_settings_item_radio:checked + label {
+    box-shadow: 4px 4px 5px rgb(255, 255, 255), -4px -4px 5px rgb(128, 128, 128);
+}
+
+.game_settings_item.active {
+    color: green;
+}
+
+.start {
+    background-color: rgb(185, 185, 255);
+}
+
+.stop {
+    background-color: rgb(255, 185, 185);
+}
+
+canvas {
+    cursor: pointer;
+}
+
+.canvas_div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.win_popup {
+    width: 75%;
+    display: block;
+    position: relative;
+    height: 100%;
+    font-size: 2rem;
+    text-align: center;
+    color: brown;
+}
+
+.results_table {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    z-index: 10;
+    width: 320px;
+    background-color: white;
+    border: 3px solid orange;
+    border-radius: 10px;
+    padding: 1rem;
+    height: 400px;
+    position: absolute;
+    margin: 2rem auto;
+}
+
+.close_popup {
+    width: 100%;
+    height: 1.5rem;
+    border: 2px solid orange;
+    border-radius: 5px;
+    background-color: rgba(255, 0, 0, 0.144);
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+.shadow {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 1, 63, 0.61);
+    position: absolute;
+    z-index: 5;
+}
+
+.hide {
+    display: none;
+}
+
+@media screen and (max-width: 1280px) and (orientation: landscape) {
+    .main {
+        width: 90%;
+        padding: 0 0.2rem;
+        margin-top: 0;
+    }
+    .game_settings_item {
+        height: 3rem;
+        font-size: 1.2em;
+    }
+    .game_menu_item {
+        height: 3rem;
+    }
+    .game_status_item {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (max-height: 1280px) and (orientation: portrait) {
+    .main {
+        width: 90%;
+        padding: 0 0.2rem;
+        margin-top: 0;
+    }
+    .game_settings_item {
+        height: 3rem;
+        font-size: 1.2em;
+    }
+    .game_menu_item {
+        height: 3rem;
+    }
+    .game_status_item {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (max-width: 1028px) and (orientation: landscape) {
+    .main {
+        height: 100vh;
+        width: 100%;
+        padding: 0;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    #cells8 + label {
+        display: none;
+    }
+    #cells7 + label {
+        display: none;
+    }
+    .menu {
+        width: 40%;
+        margin-top: 0;
+    }
+    .game_menu {
+        margin-right: 10px;
+        flex-direction: column;
+    }
+    .results_table {
+        height: 80vh;
+    }
+    .game_status {
+        flex-direction: column;
+    }
+    .game_settings_item {
+        margin: 0 4px;
+        height: 3rem;
+    }
+    .canvas_div {
+        width: 50%;
+    }
+    .game_menu_item {
+        margin: 10px 0;
+    }
+}
+
+@media screen and (max-width: 768px) and (orientation: portrait) {
+    .main {
+        width: 100%;
+        padding: 0;
+        margin-top: 0;
+    }
+    .game_settings {
+        padding: 0 10px;
+    }
+    .game_settings_item {
+        margin: 0 2px
+    }
+    #cells8 + label {
+        display: none;
+    }
+    #cells7 + label {
+        display: none;
+    }
+    .game_status_item {
+        font-size: 1rem;
+    }
+    .game_menu_item {
+        height: 3rem;
+        font-size: 1rem;
+    }
+    .canvas_div {
+        margin-top: 2em;
+    }
+}

@@ -1,24 +1,27 @@
-class Game15 {
-    constructor(target, cellSize, cellsByEdge, cellFillColor, numberColor) {
+export class Game15 {
+    constructor(target, cellSize, cellsByEdge, bgColor, cellFillColor, numberColor) {
         this.cellsByEdge = cellsByEdge;
-        this.winState = this.generateWinState().flat();
+        this.winState = this.generateWinState();
         this.state = this.generateStartState();
-        //this.state = this.generateWinState();
         this.target = target;
+        this.context = this.target.getContext("2d");
         this.cellSize = +cellSize;
         this.clicks = 0;
         this.cellColor = cellFillColor;
         this.numberColor = numberColor;
+        this.bgColor = bgColor;
         this.nullCell = {
             rowIndex: this.cellsByEdge - 1,
             colIndex: this.cellsByEdge - 1,
         };
+        this.getStateFromLocalStorage ();
+        this.setStateToLocalStorage(this.state);
     }
     generateStartState() {
         let isStateUnResolvable, startState;
 
         do {
-            const winState = [...this.winState];
+            const winState = this.winState.map((row) => row.map((el) => el)).flat();
             winState.pop();
             startState = [];
             for (let i = 0; i < this.cellsByEdge; i++) {
@@ -37,13 +40,12 @@ class Game15 {
                     }
                 }
             }
-            isStateUnResolvable = isUnresolvable(startState, this.cellsByEdge);
-            console.log(isStateUnResolvable);
+            isStateUnResolvable = isUnResolvable(startState, this.cellsByEdge);
         } while (isStateUnResolvable);
 
         return startState;
 
-        function isUnresolvable(state, holeRow) {
+        function isUnResolvable(state, holeRow) {
             const demoState = state.map((row) => row.map((el) => el)).flat();
             let count = 0;
             demoState.forEach((el, i, arr) => {
@@ -53,7 +55,7 @@ class Game15 {
                     }
                 }
             });
-            return (count + holeRow) % 2 !== 0;
+            return (holeRow % 2 === 0) ? (count + holeRow) % 2 !== 0 : (count + holeRow) % 2 === 0;
         }
     }
 
@@ -73,8 +75,8 @@ class Game15 {
         return this.clicks;
     }
     cellRender(x, y) {
-        this.target.fillStyle = this.cellColor;
-        this.target.fillRect(
+        this.context.fillStyle = this.cellColor;
+        this.context.fillRect(
             x + 2,
             y + 2,
             this.cellSize - 4,
@@ -82,19 +84,20 @@ class Game15 {
         );
     }
     numberStyle(color) {
-        this.target.font = "bold " + this.cellSize / 2 + "px system-ui";
-        this.target.textAlign = "center";
-        this.target.textBaseline = "middle";
-        this.target.fillStyle = this.numberColor;
+        this.context.font = "bold " + this.cellSize / 2 + "px system-ui";
+        this.context.textAlign = "center";
+        this.context.textBaseline = "middle";
+        this.context.fillStyle = this.numberColor;
     }
     draw() {
-        this.target.fillRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < this.cellsByEdge; i++) {
+        this.context.fillStyle = this.bgColor;
+        this.context.fillRect(0, 0, this.target.width, this.target.height);
+       for (let i = 0; i < this.cellsByEdge; i++) {
             for (let j = 0; j < this.cellsByEdge; j++) {
                 if (this.state[i][j] > 0) {
                     this.cellRender(j * this.cellSize, i * this.cellSize);
                     this.numberStyle();
-                    this.target.fillText(
+                    this.context.fillText(
                         this.state[i][j],
                         j * this.cellSize + this.cellSize / 2,
                         i * this.cellSize + this.cellSize / 2
@@ -125,42 +128,62 @@ class Game15 {
             [this.nullCell.rowIndex, this.nullCell.colIndex] = [row, col];
 
             this.clicks++;
+            localStorage.setItem("moves", this.clicks);
+            this.draw();
+            this.setStateToLocalStorage(this.state);
+            this.winCheck();
+            return true;
         }
-        this.draw();
-        this.winCheck();
+
+        
     }
 
     winCheck() {
         const currState = this.state.map((row) => row.map((el) => el)).flat(),
+        winState = this.winState.map((row) => row.map((el) => el)).flat(),
             check =
-                currState.filter((el, i) => el !== this.winState[i]).length ===
+                currState.filter((el, i) => el !== winState[i]).length ===
                 0;
-        if (check) alert("win!");
+        if (check) {
+            const wingame = new Event("wingame");
+            document.dispatchEvent(wingame);
+        }
     }
+
+    setStateToLocalStorage(state) {
+        const localState = this.state.map(el => el.map(ell => ell)).flat();
+        localStorage.setItem("state", localState.join(";"));
+        localStorage.setItem("cellsPerEdge", this.cellsByEdge);
+    }
+
+    getStateFromLocalStorage () {
+        if (localStorage.getItem("state")) {
+            const lastState = localStorage.getItem("state").split(";");
+            this.state = [];
+            for (let i = 0; i < lastState.length; i++) {
+                this.state[i] = [];
+                for (let j = 0; j < this.cellsByEdge; j++) {
+                    this.state[i].push(+lastState.shift());
+                }
+            }
+            this.draw();
+        }
+        this.findHole();
+        if (localStorage.getItem("moves")) {
+            this.clicks = +localStorage.getItem("moves");
+        }
+    }
+
+    findHole () {
+        for (let i = 0; i < this.cellsByEdge; i++) {
+            for (let j = 0; j < this.cellsByEdge; j++) {
+                if (this.state[i][j] === 0) {
+                    this.nullCell.rowIndex = i;
+                    this.nullCell.colIndex = j;
+                    break;
+                }
+            }
+        }
+    }
+    
 }
-
-const body = document.querySelector("body");
-const canvas = document.createElement("canvas");
-canvas.setAttribute("width", "330");
-canvas.setAttribute("height", "330");
-
-body.appendChild(canvas);
-
-let context = canvas.getContext("2d");
-/*
-  context.fillRect(0, 0, canvas.width, canvas.height);
-
-  let cellSize = canvas.width / 4;
-
-  let game = new Game(context, cellSize);
-  game.mix(300);
-  game.draw();
- */
-
-const game = new Game15(context, 110, 3, "#deb887", "#000000");
-game.draw();
-/* game.moveBone(2, 1);
-game.moveBone(1, 1);
-game.moveBone(1, 0);
-game.moveBone(0, 0); */
-console.log(game.state);
