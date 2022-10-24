@@ -32,6 +32,9 @@ document.addEventListener("wingame", () => {
     localStorage.removeItem("time");
 });
 
+alert("Изначально сделал сюда deploy, но заканчивал у приватном школьном репозитории. Сейчас произойдет redirect на актуальную версию выполненного задания");
+window.location.replace("https://rolling-scopes-school.github.io/luckydnepr-JSFE2022Q3/RSS-Gem-Puzzle/");
+
 pageInit();
 
 function pageInit() {
