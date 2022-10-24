@@ -39,7 +39,7 @@ input[type="radio"] {
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    margin-top: 2em;
+    margin-top: 0;
 }
 
 .game_menu,
